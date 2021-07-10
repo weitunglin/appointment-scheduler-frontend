@@ -3,8 +3,8 @@
 
     <div v-if="credentials">
       <el-row justify="end">
-          <el-button type="info" @click.prevent="logout">Log Out</el-button>
-          <el-button type="primary" @click.prevent="refresh">Refresh</el-button>
+          <el-button type="info" @click.prevent="logout">{{ $t('logout') }}</el-button>
+          <el-button type="primary" @click.prevent="refresh">{{ $t('refresh') }}</el-button>
       </el-row>
 
       <el-row class="description center">
@@ -12,7 +12,7 @@
           <el-row>
             <el-col :span="8" class="label center">
               <i class="el-icon-user"></i>
-              <span>Name</span>
+              <span>{{ $t('name') }}</span>
             </el-col>
             <el-col :span="16">
               <span>{{ credentials.studentName }}</span>
@@ -22,7 +22,7 @@
         <el-col :xs="24" :md="8">
           <el-row>
             <el-col :span="8" class="label center">
-              <span>Student ID</span>
+              <span>{{ $t('studentID') }}</span>
             </el-col>
             <el-col :span="16">
               <span>{{ credentials.studentID }}</span>
@@ -32,7 +32,7 @@
         <el-col :xs="24" :md="8">
           <el-row>
             <el-col :span="8" class="label center">
-              <span>Class</span>
+              <span>{{ $t('class') }}</span>
             </el-col>
             <el-col :span="16">
               <span>{{ credentials.class }}</span>
@@ -42,7 +42,7 @@
       </el-row>
 
       <div v-if="credentials.selection != 0">
-        <h2>Appointment:</h2>
+        <h2>{{ $t('appointment') }}:</h2>
         
         <h2>{{ dayTime[credentials.selection-1].day }} {{ dayTime[credentials.selection-1].time }}</h2>
       </div>
@@ -50,10 +50,10 @@
       <div v-if="credentials.selection == 0 && status.length" :class="{ disabled: credentials.selection != 0 }" style="margin-top: 20px;">
         <el-row justify="center" class="table">
           <el-col :span="10" class="label center">
-            Time
+            {{ $t('time') }}
           </el-col>
           <el-col :span="14" class="label center">
-            Status
+            {{ $t('status' )}}
           </el-col>
         </el-row>
         <el-row v-for="d in status" :key="`${d.day}${d.time}`" justify="center" class="table center">
@@ -61,7 +61,7 @@
             {{ d.day }}<br/>{{ d.time }}
           </el-col>
           <el-col :span="14">
-            <el-button type="primary" plain @click.prevent="book(d.selection)">Book !</el-button>
+            <el-button type="primary" plain @click.prevent="book(d.selection)">{{ $t('book') }}</el-button>
           </el-col>
         </el-row>
       </div>

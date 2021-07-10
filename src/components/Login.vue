@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-card>
-      <h2>Login</h2>
+      <h2>{{ $t('login') }}</h2>
       <el-form
         class="login-form"
         :model="model"
@@ -12,7 +12,7 @@
         <el-form-item prop="studentID">
           <el-input
             v-model="model.studentID"
-            placeholder="Student ID"
+            :placeholder="$t('studentID')"
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -22,7 +22,7 @@
             type="primary"
             native-type="submit"
             block
-          >Login</el-button>
+          >{{ $t('login') }}</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -46,7 +46,7 @@ export default {
         studentID: [
           {
             required: true,
-            message: "Student ID is required",
+            message: this.$t("studentIDRequired"),
             trigger: "blur"
           },
           {
