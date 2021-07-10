@@ -41,7 +41,13 @@
         </el-col>
       </el-row>
 
-      <div style="margin-top: 20px;">
+      <div v-if="credentials.selection != 0">
+        <h2>Appointment:</h2>
+        
+        <h2>{{ dayTime[credentials.selection-1].day }} {{ dayTime[credentials.selection-1].time }}</h2>
+      </div>
+
+      <div v-if="credentials.selection == 0 && status.length" :class="{ disabled: credentials.selection != 0 }" style="margin-top: 20px;">
         <el-row justify="center" class="table">
           <el-col :span="10" class="label center">
             Time
@@ -50,63 +56,14 @@
             Status
           </el-col>
         </el-row>
-        <el-row justify="center" class="table">
+        <el-row v-for="d in status" :key="`${d.day}${d.time}`" justify="center" class="table center">
           <el-col :span="10">
-            7/13 Tue. <br/>16:00 - 17:00
+            {{ d.day }}<br/>{{ d.time }}
           </el-col>
           <el-col :span="14">
-            
+            <el-button type="primary" plain @click.prevent="book(d.selection)">Book !</el-button>
           </el-col>
         </el-row>
-        <el-row justify="center" class="table">
-          <el-col :span="10">
-            7/14 Wed. <br/>16:00 - 17:00
-          </el-col>
-          <el-col :span="14">
-            
-          </el-col>
-        </el-row>
-        <el-row justify="center" class="table">
-          <el-col :span="10">
-            7/15 Thu. <br/>16:00 - 17:00
-          </el-col>
-          <el-col :span="14">
-            
-          </el-col>
-        </el-row>
-        <el-row justify="center" class="table">
-          <el-col :span="10">
-            7/17 Sat. <br/>09:00 - 10:30
-          </el-col>
-          <el-col :span="14">
-            
-          </el-col>
-        </el-row>
-        <el-row justify="center" class="table">
-          <el-col :span="10">
-            7/13 Tue. <br/>10:30 - 13:00
-          </el-col>
-          <el-col :span="14">
-            
-          </el-col>
-        </el-row>
-        <el-row justify="center" class="table">
-          <el-col :span="10">
-            7/13 Tue. <br/>13:00 - 14:30
-          </el-col>
-          <el-col :span="14">
-            
-          </el-col>
-        </el-row>
-        <el-row justify="center" class="table">
-          <el-col :span="10">
-            7/13 Tue. <br/>14:30 - 16:00
-          </el-col>
-          <el-col :span="14">
-            
-          </el-col>
-        </el-row>
-        
       </div>
     </div>
 
@@ -116,6 +73,33 @@
 <script>
 export default {
   name: 'Appointment',
+  data: function() {
+    return {
+      status: {},
+      dayTime: [{
+        day: '7/13 Tue',
+        time: '16:00 - 17:00'
+      }, {
+        day: '7/14 Wed.',
+        time: '16:00 - 17:00'
+      }, {
+        day: '7/15 Thu.',
+        time: '16:00 - 17:00'
+      }, {
+        day: '7/17 Sat.',
+        time: '09:00 - 10:30'
+      }, {
+        day: '7/17 Sat.',
+        time: '10:30 - 13:00'
+      }, {
+        day: '7/17 Sat.',
+        time: '13:00 - 14:30'
+      }, {
+        day: '7/17 Sat.',
+        time: '14:30 - 16:00'
+      }] 
+    }
+  },
   props: {
     credentials: {
       dorm: Number,
@@ -130,19 +114,10 @@ export default {
     login: Boolean
   },
   emits: ['update:login', 'update:credentials'],
-  async created() {
+  created() {
     console.log(this.credentials)
-    
-    if (this.credentials.token) {
-      const res = await this.axios.request({
-        url: '/status',
-        method: 'get',
-        headers: {
-          authorization: this.credentials.token
-        }
-      })
-      console.log(res)
-    }
+   
+    this.getStatus()    
   },
   methods: {
     logout: function() {
@@ -152,6 +127,61 @@ export default {
     },
     refresh: function() {
       // do api calls
+      console.log(this.status)
+      this.getStatus()
+    },
+    getStatus: async function() {
+      if (this.credentials.token) {
+        try {
+          const res = await this.axios.request({
+            url: '/status',
+            method: 'get',
+            headers: {
+              authorization: this.credentials.token
+            }
+          })
+          console.log(res)
+  
+          if (res.status == 201) {
+            this.$emit('update:credentials', { ...this.credentials, selection: res.data.selection })
+            this.status = {}
+          } else if (res.status == 200) {
+            this.status = res.data
+          }
+        } catch (err) {
+          console.error(err)
+        }
+      } else {
+        this.$message.error('Please login.')
+        this.$emit('update:login', false)
+      }
+    },
+    book: async function(selection) {
+      try {
+        console.log(selection)
+        const res = await this.axios.request({
+          url: '/book',
+          method: 'post',
+          headers: {
+            authorization: this.credentials.token
+          },
+          data: {
+            selection
+          }
+        })
+        console.log(res)
+
+        if (res.status == 201) {
+          this.$emit('update:credentials', { ...this.credentials, selection: res.data.selection })
+          this.status = {}
+        } else if (res.status == 204) {
+          this.$message.success('Successfully booked')
+          this.getStatus()
+        }
+      } catch (err) {
+        console.error(err)
+        this.$message.error('Something went wrong...')
+      }
     }
   }
 }
@@ -213,10 +243,14 @@ a {
   content: 'Unavailble';
 }
 .table .el-col {
-  padding: 5px;
+  padding: 10px;
 }
 .table.el-row {
   border-bottom: 1px solid #E0E0F0;
   border-collapse: collapse;
+}
+
+.disabled {
+  cursor: not-allowed;
 }
 </style>
