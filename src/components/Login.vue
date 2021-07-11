@@ -55,7 +55,7 @@ export default {
               if (reg.test(value)) {
                 callback()
               } else {
-                callback(new Error("學號須為9位數字")
+                callback(new Error("學號須為9位數字"))
               }
             },
             trigger: "blur"
