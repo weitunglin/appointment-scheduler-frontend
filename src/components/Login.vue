@@ -80,7 +80,7 @@ export default {
             }
           })
           console.log(res)
-          this.$message.success('Login successfull')
+          this.$message.success('Login successfully')
           localStorage.setItem('cred', JSON.stringify(res.data))
           this.$emit('update:login', true)
           this.$emit('update:credentials', res.data)

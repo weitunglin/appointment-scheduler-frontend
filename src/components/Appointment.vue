@@ -47,23 +47,40 @@
         <h2>{{ dayTime[credentials.selection-1].day }} {{ dayTime[credentials.selection-1].time }}</h2>
       </div>
 
-      <div v-if="credentials.selection == 0 && status.length" :class="{ disabled: credentials.selection != 0 }" style="margin-top: 20px;">
-        <el-row justify="center" class="table">
-          <el-col :span="10" class="label center">
-            {{ $t('time') }}
-          </el-col>
-          <el-col :span="14" class="label center">
-            {{ $t('status' )}}
-          </el-col>
-        </el-row>
-        <el-row v-for="d in status" :key="`${d.day}${d.time}`" justify="center" class="table center">
-          <el-col :span="10">
-            {{ d.day }}<br/>{{ d.time }}
-          </el-col>
-          <el-col :span="14">
-            <el-button type="primary" plain @click.prevent="book(d.selection)">{{ $t('book') }}</el-button>
-          </el-col>
-        </el-row>
+      <div v-else-if="moment().isBefore(moment(status.openTime))">
+        <h2>尚未開放</h2>
+        <h3>開放時間: {{ moment(status.openTime).calendar() }}</h3>
+      </div>
+
+      <div v-else :class="{ disabled: credentials.selection != 0 }" style="margin-top: 20px;">
+        <div v-if="status.result && status.result.length">
+          <el-row justify="center" class="table">
+            <el-col :span="10" class="label center">
+              {{ $t('time') }}
+            </el-col>
+            <el-col :span="14" class="label center">
+              {{ $t('status' )}}
+            </el-col>
+          </el-row>
+          <el-row v-for="d in status.result" :key="`${d.day}${d.time}`" justify="center" class="table center">
+            <el-col :span="10">
+              {{ d.day }}<br/>{{ d.time }}
+            </el-col>
+            <el-col :span="14">
+              <el-button type="primary" plain @click.prevent="book(d.selection)">{{ $t('book') }}</el-button>
+            </el-col>
+          </el-row>
+        </div>
+
+        <div v-else>
+          <el-row>
+            <el-col :span="24">
+              <el-result icon="info" title="無可預約時段">
+              </el-result>
+            </el-col>
+          </el-row>
+        </div>
+      
       </div>
     </div>
 
@@ -71,6 +88,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   name: 'Appointment',
   data: function() {
@@ -116,7 +134,7 @@ export default {
   emits: ['update:login', 'update:credentials'],
   created() {
     console.log(this.credentials)
-   
+    this.moment = moment
     this.getStatus()    
   },
   methods: {

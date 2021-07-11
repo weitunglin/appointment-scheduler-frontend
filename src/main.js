@@ -41,6 +41,9 @@ locale: 'zh-tw',
   }
 })
 
+import * as moment from 'moment'
+
 const app = createApp(App).use(ElementPlus).use(i18n)
+app.config.globalProperties.moment = moment
 app.config.globalProperties.axios = axios
 app.mount('#app')
