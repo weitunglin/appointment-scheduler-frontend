@@ -95,25 +95,25 @@ export default {
     return {
       status: {},
       dayTime: [{
-        day: '7/13 Tue',
+        day: '7/13 （二）',
         time: '16:00 - 17:00'
       }, {
-        day: '7/14 Wed.',
+        day: '7/14 （三）',
         time: '16:00 - 17:00'
       }, {
-        day: '7/15 Thu.',
+        day: '7/15 （四）',
         time: '16:00 - 17:00'
       }, {
-        day: '7/17 Sat.',
+        day: '7/17 （六）',
         time: '09:00 - 10:30'
       }, {
-        day: '7/17 Sat.',
+        day: '7/17 （六）',
         time: '10:30 - 13:00'
       }, {
-        day: '7/17 Sat.',
+        day: '7/17 （六）',
         time: '13:00 - 14:30'
       }, {
-        day: '7/17 Sat.',
+        day: '7/17 （六）',
         time: '14:30 - 16:00'
       }] 
     }
@@ -170,7 +170,7 @@ export default {
           console.error(err)
         }
       } else {
-        this.$message.error('Please login.')
+        this.$message.error('請先登入')
         this.$emit('update:login', false)
       }
     },
@@ -193,12 +193,12 @@ export default {
           this.$emit('update:credentials', { ...this.credentials, selection: res.data.selection })
           this.status = {}
         } else if (res.status == 204) {
-          this.$message.success('Successfully booked')
+          this.$message.success('已預約成功')
           this.getStatus()
         }
       } catch (err) {
         console.error(err)
-        this.$message.error('Something went wrong...')
+        this.$message.error('系統出現錯誤...')
       }
     }
   }

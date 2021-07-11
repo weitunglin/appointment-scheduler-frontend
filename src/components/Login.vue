@@ -55,7 +55,7 @@ export default {
               if (reg.test(value)) {
                 callback()
               } else {
-                callback(new Error("Student ID length should be 9 numbers"))
+                callback(new Error("學號須為9位數字")
               }
             },
             trigger: "blur"
@@ -80,7 +80,7 @@ export default {
             }
           })
           console.log(res)
-          this.$message.success('Login successfully')
+          this.$message.success('登入成功')
           localStorage.setItem('cred', JSON.stringify(res.data))
           this.$emit('update:login', true)
           this.$emit('update:credentials', res.data)
@@ -88,7 +88,7 @@ export default {
           if (err.response.data) {
             this.$message.error(`${err.response.data.error}`)
           } else {
-            this.$message.error('Error occurred, please try again later')
+            this.$message.error('出現錯誤，請稍候再試')
           }
           this.$emit('update:login', false)
           console.error(err.response)
