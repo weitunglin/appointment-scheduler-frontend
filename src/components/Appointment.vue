@@ -52,8 +52,8 @@
         <h3>開放時間: {{ moment(status.openTime).format('M/D h:mm:ss') }}</h3>
       </div>
 
-      <div v-else :class="{ disabled: credentials.selection != 0 }" style="margin-top: 20px;">
-        <div v-if="status.result && status.result.length">
+      <div v-else-if="status.result" :class="{ disabled: credentials.selection != 0 }" style="margin-top: 20px;">
+        <div v-if="status.result.length">
           <el-row justify="center" class="table">
             <el-col :span="10" class="label center">
               {{ $t('time') }}
@@ -198,7 +198,8 @@ export default {
         }
       } catch (err) {
         console.error(err)
-        this.$message.error('系統出現錯誤...')
+        this.$message.error('無法預約此時段...')
+        this.getStatus()
       }
     }
   }
