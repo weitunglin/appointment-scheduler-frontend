@@ -49,7 +49,7 @@
 
       <div v-else-if="moment().isBefore(moment(status.openTime))">
         <h2>尚未開放</h2>
-        <h3>開放時間: {{ moment(status.openTime).calendar() }}</h3>
+        <h3>開放時間: {{ moment(status.openTime).format('M/D h:mm:ss') }}</h3>
       </div>
 
       <div v-else :class="{ disabled: credentials.selection != 0 }" style="margin-top: 20px;">
