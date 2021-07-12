@@ -1,5 +1,6 @@
-import { createApp } from 'vue'
+import * as moment from 'moment'
 import App from './App.vue'
+import { createApp } from 'vue'
 
 import ElementPlus from 'element-plus/lib/index.full'
 import 'element-plus/lib/theme-chalk/index.css'
@@ -41,7 +42,6 @@ locale: 'zh-tw',
   }
 })
 
-import * as moment from 'moment'
 
 const app = createApp(App).use(ElementPlus).use(i18n)
 app.config.globalProperties.moment = moment
