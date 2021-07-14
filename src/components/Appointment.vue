@@ -41,13 +41,11 @@
         </el-col>
       </el-row>
 
-      <div v-if="credentials.selection != 0">
-        <h2>{{ $t('appointment') }}:</h2>
-        
-        <h2>{{ dayTime[credentials.selection-1].day }} {{ dayTime[credentials.selection-1].time }}</h2>
+      <div v-if="status.resultTime">
+        <h2>預約/排定時間：{{ moment(status.resultTime).format('M/D H:mm:ss') }}</h2>
       </div>
 
-      <div v-else-if="moment().isBefore(moment(status.openTime))">
+      <div v-else-if="status.openTime && moment().isBefore(moment(status.openTime))">
         <h2>尚未開放</h2>
         <h3>開放時間: {{ moment(status.openTime).format('M/D H:mm:ss') }}</h3>
       </div>
@@ -82,6 +80,7 @@
         </div>
       
       </div>
+
     </div>
 
   </div>
@@ -165,6 +164,15 @@ export default {
             this.status = {}
           } else if (res.status == 200) {
             this.status = res.data
+            if (this.status.resultTime) {
+                const from = moment(this.status.resultTime).subtract(15, 'm');
+                const to = moment(this.status.resultTime).add(15, 'm');
+                if (moment().isBetween(from, to)) {
+                    // document.body.style.backgroundColor = '#00ff00';
+                } else {
+                    // document.body.style.backgroundColor = '#ff0000';
+                }
+            }
           }
         } catch (err) {
           console.error(err)
